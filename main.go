@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/hamidteimouri/go-oauth-server/pkg"
+	"github.com/hamidteimouri/go-oauth-server/pkg/bootstrap"
 )
 
 func main() {
-	pkg.Run()
+	/* run the application */
+	bootstrap.Run()
 	fmt.Println("application is running now... enjoy it!")
 }

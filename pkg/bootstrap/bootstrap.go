@@ -1,16 +1,14 @@
-package pkg
+package bootstrap
 
 import (
 	"github.com/hamidteimouri/go-oauth-server/pkg/database"
-	"github.com/jinzhu/gorm"
+	"github.com/hamidteimouri/go-oauth-server/pkg/servers"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
 
-type Server struct {
-	DB gorm.DB
-}
+var server = servers.Server{}
 
 func Run() {
 	var err error
@@ -30,5 +28,10 @@ func Run() {
 
 	/* database connection */
 	database.Initialize(DB_DRIVER, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME)
+
+	server.Initialize()
+
+	/* run server */
+	server.RunningReport("127.0.0.1:8080")
 
 }

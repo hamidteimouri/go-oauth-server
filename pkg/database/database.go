@@ -3,8 +3,8 @@ package database
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"    //mysql database driver
-	_ "github.com/jinzhu/gorm/dialects/postgres" //postgres database driver
+	_ "github.com/jinzhu/gorm/dialects/mysql"    /* mysql database driver */
+	_ "github.com/jinzhu/gorm/dialects/postgres" /* postgres database driver */
 	"log"
 	"strings"
 )
