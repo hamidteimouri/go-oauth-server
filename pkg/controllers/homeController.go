@@ -1,10 +1,12 @@
 package controllers
 
 import (
-	"github.com/hamidteimouri/go-oauth-server/pkg/utils"
 	"net/http"
+
+	"github.com/hamidteimouri/go-oauth-server/pkg/utils"
 )
 
 func Home(writer http.ResponseWriter, request *http.Request) {
-	utils.JsonResponse(writer, http.StatusOK, "this is method")
+	message := utils.Message(true, "You are visiting our service...")
+	utils.JsonResponse(writer, http.StatusOK, message)
 }
