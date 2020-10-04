@@ -2,12 +2,16 @@ package modeltests_test
 
 import (
 	"fmt"
+	"github.com/hamidteimouri/go-oauth-server/pkg/servers"
+	"github.com/jinzhu/gorm"
 	"log"
 	"os"
 	"testing"
 
 	"github.com/joho/godotenv"
 )
+
+var server = servers.Server{}
 
 func TestMain(m *testing.M) {
 	var err error
@@ -27,13 +31,32 @@ func Database() {
 
 	if TestDbDriver == "mysql" {
 
-		BDURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 			os.Getenv("TestDbUser"), os.Getenv("TestDbPassword"),
 			os.Getenv("TestDbHost"), os.Getenv("TestDbPort"),
 			os.Getenv("TestDbName"))
 
-	}
-	if TestDbDriver == "postgres" {
+		server.DB, err = gorm.Open(TestDbDriver, DBURL)
 
+		if err != nil {
+			fmt.Printf("cannot connect to database %s", TestDbDriver)
+			log.Fatal("this is error :", err)
+		}
+
+	} else if TestDbDriver == "postgres" {
+		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
+			os.Getenv("TEST_DB_HOST"), os.Getenv("TEST_DB_PORT"), os.Getenv("TEST_DB_USER"),
+			os.Getenv("TEST_DB_NAME"), os.Getenv("TEST_DB_NAME"))
+
+		server.DB, err = gorm.Open(TestDbDriver, DBURL)
+
+		if err != nil {
+			fmt.Printf("cannot connect to database %s", TestDbDriver)
+			log.Fatal("this is error :", err)
+		}
 	}
+}
+
+func RefreshUserTable() {
+	fmt.Println("preparing...")
 }
