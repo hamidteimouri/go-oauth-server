@@ -1,7 +1,8 @@
-package modeltests_test
+package modeltests
 
 import (
 	"fmt"
+	"github.com/hamidteimouri/go-oauth-server/pkg/models"
 	"github.com/hamidteimouri/go-oauth-server/pkg/servers"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -12,6 +13,7 @@ import (
 )
 
 var server = servers.Server{}
+var userInstance = models.User{}
 
 func TestMain(m *testing.M) {
 	var err error
@@ -21,6 +23,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Error getting env %v\n", err)
 	}
 
+	Database()
 	os.Exit(m.Run())
 }
 
@@ -57,6 +60,62 @@ func Database() {
 	}
 }
 
-func RefreshUserTable() {
-	fmt.Println("preparing...")
+func refreshUserTable() error {
+	err := server.DB.DropTableIfExists(&models.User{}).Error
+	if err != nil {
+		return err
+	}
+
+	err = server.DB.AutoMigrate(&models.User{}).Error
+
+	if err != nil {
+		return err
+	}
+	log.Printf("Successfully refreshed table")
+	return nil
+
+}
+
+func SeedOneUser() (models.User, error) {
+	refreshUserTable()
+
+	user := models.User{
+		Name:   "Hamid",
+		Family: "Teimouri",
+		Email:  "h.teimouri@yourypto.com",
+	}
+
+	err := server.DB.Model(models.User{}).Create(user).Error
+
+	if err != nil {
+		log.Fatalf("cannot seed users table: %v", err)
+	}
+
+	return user, nil
+
+}
+
+func SeedUsers() error {
+	users := []models.User{
+		models.User{
+			Name:   "Hamid",
+			Family: "Teimouri",
+			Email:  "h.teimouri@yourypto.com",
+		},
+		models.User{
+			Name:   "Mostafa",
+			Family: "Nouri",
+			Email:  "m.nouri@yourypto.com",
+		},
+	}
+
+	for i, _ := range users {
+		err := server.DB.Model(&models.User{}).Create(&users[i]).Error
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
