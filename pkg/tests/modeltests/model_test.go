@@ -2,6 +2,7 @@ package modeltests_test
 
 import (
 	"fmt"
+	"github.com/hamidteimouri/go-oauth-server/pkg/models"
 	"github.com/hamidteimouri/go-oauth-server/pkg/servers"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -57,6 +58,37 @@ func Database() {
 	}
 }
 
-func RefreshUserTable() {
-	fmt.Println("preparing...")
+func RefreshUserTable() error {
+	err := server.DB.DropTableIfExists(&models.User{}).Error
+	if err != nil {
+		return err
+	}
+
+	err = server.DB.AutoMigrate(&models.User{}).Error
+
+	if err != nil {
+		return err
+	}
+	log.Printf("Successfully refreshed table")
+	return nil
+
+}
+
+func SeedOneUser() (models.User, error) {
+	RefreshUserTable()
+
+	user := models.User{
+		Name:   "Hamid",
+		Family: "Teimouri",
+		Email:  "h.teimouri@yourypto.com",
+	}
+
+	err := server.DB.Model(models.User{}).Create(user).Error
+
+	if err != nil {
+		log.Fatalf("cannot seed users table: %v", err)
+	}
+
+	return user, nil
+
 }
