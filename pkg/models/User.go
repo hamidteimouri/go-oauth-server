@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"html"
 	"strings"
@@ -32,4 +33,17 @@ func (u *User) prepare() {
 	u.Username = html.EscapeString(strings.TrimSpace(strings.ToLower(u.Username)))
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
+}
+
+func (u *User) GetAllUsers(db *gorm.DB) (*[]User, error) {
+	var err error
+
+	users := []User{}
+
+	err = db.Debug().Model(&User{}).Find(&users).Error
+
+	if err != nil {
+		return &[]User{}, err
+	}
+	return &users, err
 }

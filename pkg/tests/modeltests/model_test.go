@@ -1,4 +1,4 @@
-package modeltests_test
+package modeltests
 
 import (
 	"fmt"
@@ -13,6 +13,7 @@ import (
 )
 
 var server = servers.Server{}
+var userInstance = models.User{}
 
 func TestMain(m *testing.M) {
 	var err error
@@ -22,6 +23,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Error getting env %v\n", err)
 	}
 
+	Database()
 	os.Exit(m.Run())
 }
 
@@ -58,7 +60,7 @@ func Database() {
 	}
 }
 
-func RefreshUserTable() error {
+func refreshUserTable() error {
 	err := server.DB.DropTableIfExists(&models.User{}).Error
 	if err != nil {
 		return err
@@ -75,7 +77,7 @@ func RefreshUserTable() error {
 }
 
 func SeedOneUser() (models.User, error) {
-	RefreshUserTable()
+	refreshUserTable()
 
 	user := models.User{
 		Name:   "Hamid",
@@ -91,4 +93,29 @@ func SeedOneUser() (models.User, error) {
 
 	return user, nil
 
+}
+
+func SeedUsers() error {
+	users := []models.User{
+		models.User{
+			Name:   "Hamid",
+			Family: "Teimouri",
+			Email:  "h.teimouri@yourypto.com",
+		},
+		models.User{
+			Name:   "Mostafa",
+			Family: "Nouri",
+			Email:  "m.nouri@yourypto.com",
+		},
+	}
+
+	for i, _ := range users {
+		err := server.DB.Model(&models.User{}).Create(&users[i]).Error
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
