@@ -1,4 +1,4 @@
-package modeltests
+package tests
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ var server = servers.Server{}
 var userInstance = models.User{}
 
 func TestMain(m *testing.M) {
+	fmt.Println("The test operation is starting ...")
 	var err error
 	err = godotenv.Load(os.ExpandEnv("../../../.env"))
 
@@ -76,7 +77,7 @@ func refreshUserTable() error {
 
 }
 
-func SeedOneUser() (models.User, error) {
+func seedOneUser() (models.User, error) {
 	refreshUserTable()
 
 	user := models.User{
@@ -95,7 +96,7 @@ func SeedOneUser() (models.User, error) {
 
 }
 
-func SeedUsers() error {
+func seedUsers() error {
 	users := []models.User{
 		models.User{
 			Name:   "Hamid",

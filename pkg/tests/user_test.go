@@ -1,4 +1,4 @@
-package modeltests
+package tests
 
 import (
 	"log"
@@ -14,6 +14,10 @@ func TestGetAllUsers(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {
 		log.Fatal("cannot refresh users table")
+	}
+	err = seedUsers()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	users, err := userInstance.GetAllUsers(server.DB)
