@@ -1,4 +1,4 @@
-package tests
+package modeltests
 
 import (
 	"log"
@@ -28,4 +28,5 @@ func TestGetAllUsers(t *testing.T) {
 	}
 
 	assert.Equal(t, len(*users), 2)
+
 }

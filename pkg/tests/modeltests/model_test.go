@@ -1,4 +1,4 @@
-package tests
+package modeltests
 
 import (
 	"fmt"
@@ -78,7 +78,11 @@ func refreshUserTable() error {
 }
 
 func seedOneUser() (models.User, error) {
-	refreshUserTable()
+	err := refreshUserTable()
+
+	if err != nil {
+		log.Fatalf("cannot refresh user table: %v", err)
+	}
 
 	user := models.User{
 		Name:   "Hamid",
@@ -86,7 +90,7 @@ func seedOneUser() (models.User, error) {
 		Email:  "h.teimouri@yourypto.com",
 	}
 
-	err := server.DB.Model(models.User{}).Create(user).Error
+	err = server.DB.Model(models.User{}).Create(user).Error
 
 	if err != nil {
 		log.Fatalf("cannot seed users table: %v", err)
